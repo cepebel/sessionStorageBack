@@ -1,5 +1,7 @@
 import { connect } from './../config/user.db.config';
+import { UserDto } from '../../types';
 import { UserPojo } from "../models/user.model";
+import { v4 as uuid } from 'uuid'
 
 export class UserRepository{
     _db : any = {}
@@ -10,10 +12,11 @@ export class UserRepository{
         this._userRepository = this._db.sequelize.getRepository(UserPojo)
     }
 
-    async addUser(newUser: UserPojo): Promise<string>{
+    async addUser(newUser: UserDto): Promise<string>{
         try{
+            newUser.userId = uuid()
             newUser = await this._userRepository.create(newUser)
-            return newUser.id
+            return newUser.userId
         }catch(error){
             console.error(error)
             return '-1'
@@ -33,6 +36,15 @@ export class UserRepository{
         try{
             return await this._userRepository.findByPk(id)
         } catch (error){
+            console.error(error)
+            return undefined
+        }
+    }
+
+    async getUserByEmail(userEmail: string): Promise<UserPojo|undefined>{
+        try{
+            return await this._userRepository.findOne({where: {email: userEmail}})
+        }catch(error){
             console.error(error)
             return undefined
         }

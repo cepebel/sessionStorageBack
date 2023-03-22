@@ -37,4 +37,14 @@ export class UserService{
         })
         return userPromise
     }
+
+    async getUserByEmail(email: string): Promise<UserDto|undefined>{
+        const userPromise = await this._userRepository.getUserByEmail(email).then(user=>{
+            return user
+        }).catch(error=>{
+            console.error(error)
+            throw error
+        })
+        return userPromise
+    }
 }

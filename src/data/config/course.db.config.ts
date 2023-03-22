@@ -4,7 +4,7 @@ import { UserCoursePojo } from "../models/user-course.model";
 
 export const connect = () =>{
     const DB_HOSTNAME = 'localhost'
-    const DB_PORT = 3142
+    const DB_PORT = 5432
     const DB_NAME = 'postgres'
     const DB_USERNAME = 'postgres'
     const DB_PASSWORD = 'd3cj'

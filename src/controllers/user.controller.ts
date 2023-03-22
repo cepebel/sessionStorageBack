@@ -31,5 +31,17 @@ export const userController = {
             console.error(error)
             res.sendStatus(500)
         }
+    },
+    getUserByEmail: (req: any, res: any) =>{
+        try{
+            const userEmail = req.params.email
+            userService.getUserByEmail(userEmail).then(result=>{
+                res.json(result)
+            })
+        }catch(error){
+            console.error(error)
+            res.sendStatus(500)
+        }
     }
+
 }

@@ -1,6 +1,7 @@
-import { connect } from './../config/user.db.config';
+import { connect } from './../config/course.db.config';
 import { CoursePojo } from '../models/course.model';
 import { UserCoursePojo } from '../models/user-course.model';
+import { v4 as uuid } from 'uuid'
 
 export class CourseRepository{
     _db : any = {}
@@ -15,6 +16,8 @@ export class CourseRepository{
 
     async addCourse(newCourse: CoursePojo): Promise<string>{
         try{
+            console.log('Añadiendo curso')
+            newCourse.courseId = uuid()
             newCourse = await this._courseRepository.create(newCourse)
             return newCourse.id
         }catch(error){
@@ -26,6 +29,15 @@ export class CourseRepository{
     async getAllCourses(): Promise<CoursePojo[]>{
         try{
             return await this._courseRepository.findAll()
+        }catch(error){
+            console.error(error)
+            return []
+        }
+    }
+
+    async getCoursesById(idArray: string[]): Promise<CoursePojo[]>{
+        try{
+            return await this._courseRepository.findAll({where:{courseId:idArray}})
         }catch(error){
             console.error(error)
             return []
@@ -50,8 +62,27 @@ export class CourseRepository{
         }
     }
 
+    async getAllJoins(): Promise<UserCoursePojo[]>{
+        try{
+            return await this._joinRepository.findAll()
+        }catch(error){
+            console.error(error)
+            return []
+        }
+    }
+
+    async getUserJoins(id: string): Promise<UserCoursePojo[]>{
+        try{
+            return await this._joinRepository.findAll({where:{userId:id}})
+        }catch(error){
+            console.error(error)
+            return []
+        }
+    }
+
     async enroleCourse(newJoin: UserCoursePojo): Promise<string>{
         try{
+            console.log('creating join')
             newJoin = await this._joinRepository.create(newJoin)
             return newJoin.id
         }catch(error){
@@ -73,19 +104,23 @@ export class CourseRepository{
 
     async checkVacancies(courseId: string): Promise<number>{
         try{
-            return  await this._courseRepository.findByPk(courseId).vacancies
+            const course = await this._courseRepository.findByPk(courseId)
+            return course.vacancies
         }catch(error){
             console.error(error)
             return -1
         }
     }
 
-    async updateVacancies(courseId: string, newVacancies: number){ 
+    async updateVacancies(courseId: string, newVacancies: number): Promise<boolean>{ 
         try{
-            const course = await this._courseRepository.findByPk(courseId).set({vacancies:newVacancies})
+            const course = await this._courseRepository.findByPk(courseId)
+            await course.set({vacancies:newVacancies})
             await course.save()
+            return true
         }catch(error){
             console.error(error)
+            return false
         }
     }
 }

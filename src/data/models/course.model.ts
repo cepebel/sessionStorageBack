@@ -1,10 +1,13 @@
 import {NUMBER, STRING, DATE, INTEGER} from 'sequelize'
-import {Table, Column, Model} from 'sequelize-typescript'
+import {Table, Column, Model, CreatedAt} from 'sequelize-typescript'
 
 @Table({
     freezeTableName: true,
     schema: 'ejercicio-back',
-    tableName: 'courses'
+    tableName: 'courses',
+    createdAt: false,
+    updatedAt: false
+
 })
 
 export class CoursePojo extends Model{

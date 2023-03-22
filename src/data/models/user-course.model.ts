@@ -4,7 +4,9 @@ import {Table, Column, Model} from 'sequelize-typescript'
 @Table({
     freezeTableName: true,
     schema: 'ejercicio-back',
-    tableName: 'user-course'
+    tableName: 'user-course',
+    createdAt: false,
+    updatedAt: false
 })
 
 export class UserCoursePojo extends Model{
